@@ -147,56 +147,56 @@ fn panic_handler(_info: &PanicInfo) -> ! {
     loop {}
 }
 
-// #[cfg(test)]
-// mod tests {
-//     // Note this useful idiom: importing names from outer (for mod tests) scope.
-//     use super::*;
-//
-//     #[test]
-//     fn test_led1_on() {
-//         assert_eq!(
-//             parse_uart("esp led1 on".as_ptr(), "esp led1 on".len() as u32),
-//             Command {
-//                 success: true,
-//                 led: Led::Led1,
-//                 state: LedState::On,
-//             }
-//         );
-//     }
-//
-//     #[test]
-//     fn test_led2_off() {
-//         assert_eq!(
-//             parse_uart("esp led2 off".as_ptr(), "esp led2 off".len() as u32),
-//             Command {
-//                 success: true,
-//                 led: Led::Led2,
-//                 state: LedState::Off,
-//             }
-//         );
-//     }
-//
-//     #[test]
-//     fn test_led2_off_fail() {
-//         assert_eq!(
-//             parse_uart("esp led2 ofna".as_ptr(), "esp led2 ofna".len() as u32),
-//             Command {
-//                 success: false,
-//                 led: Led::Led1,
-//                 state: LedState::Off,
-//             }
-//         );
-//     }
-//
-//     #[test]
-//     fn test_led3_on_oversized() {
-//         assert_eq!(
-//             parse_uart("esp led3 on".as_ptr(), ("esp led3 on".len() + 2) as u32),
-//             Command {
-//                 success: true,
-//                 led: Led::Led3,
-//                 state: LedState::On,
-//             }
-//         );
-//     }
-// }
+#[cfg(test)]
+mod tests {
+    // Note this useful idiom: importing names from outer (for mod tests) scope.
+    use super::*;
+
+    #[test]
+    fn test_led1_on() {
+        assert_eq!(
+            parse_uart("esp led1 on".as_ptr(), "esp led1 on".len() as u32),
+            Command {
+                success: true,
+                led: Led::Led1,
+                state: LedState::On,
+            }
+        );
+    }
+
+    #[test]
+    fn test_led2_off() {
+        assert_eq!(
+            parse_uart("esp led2 off".as_ptr(), "esp led2 off".len() as u32),
+            Command {
+                success: true,
+                led: Led::Led2,
+                state: LedState::Off,
+            }
+        );
+    }
+
+    #[test]
+    fn test_led2_off_fail() {
+        assert_eq!(
+            parse_uart("esp led2 ofna".as_ptr(), "esp led2 ofna".len() as u32),
+            Command {
+                success: false,
+                led: Led::Led1,
+                state: LedState::Off,
+            }
+        );
+    }
+
+    #[test]
+    fn test_led3_on_oversized() {
+        assert_eq!(
+            parse_uart("esp led3 on".as_ptr(), ("esp led3 on".len() + 2) as u32),
+            Command {
+                success: true,
+                led: Led::Led3,
+                state: LedState::On,
+            }
+        );
+    }
+}
