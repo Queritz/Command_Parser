@@ -130,7 +130,7 @@ impl Command {
 
 /// Unsafe function that converts a pointer of bytes into a byte slice.
 /// Needed because slices are not FFI friendly. Potentially dangerous if
-/// a wrong length is give, but there is no way to check that.
+/// a wrong length is give, but that must be handled on the C side.
 fn bytes_to_slice(input: *const u8, length: u32) -> &'static [u8] {
     unsafe { from_raw_parts(input, length as usize) }
 }
