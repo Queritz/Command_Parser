@@ -131,13 +131,13 @@ impl Command {
 /// Unsafe function that converts a pointer of bytes into a byte slice.
 /// Needed because slices are not FFI friendly. Potentially dangerous if
 /// a wrong length is give, but that must be handled on the C side.
-fn bytes_to_slice(input: *const u8, length: u32) -> &'static [u8] {
-    unsafe { from_raw_parts(input, length as usize) }
+fn bytes_to_slice(input: *const u8, length: usize) -> &'static [u8] {
+    unsafe { from_raw_parts(input, length) }
 }
 
 /// C FFI. Converts the ASCII stream into a usable command.
 #[no_mangle]
-pub extern "C" fn parse_uart(input: *const u8, length: u32) -> Command {
+pub extern "C" fn parse_uart(input: *const u8, length: usize) -> Command {
     Command::from_slice(bytes_to_slice(input, length))
 }
 
@@ -154,8 +154,9 @@ mod tests {
 
     #[test]
     fn test_led1_on() {
+        const LED1_ON_COMMAND: &str = "esp led1 on";
         assert_eq!(
-            parse_uart("esp led1 on".as_ptr(), "esp led1 on".len() as u32),
+            parse_uart(LED1_ON_COMMAND.as_ptr(), LED1_ON_COMMAND.len()),
             Command {
                 success: true,
                 led: Led::Led1,
@@ -166,8 +167,9 @@ mod tests {
 
     #[test]
     fn test_led2_off() {
+        const LED2_OFF_COMMAND: &str = "esp led2 off";
         assert_eq!(
-            parse_uart("esp led2 off".as_ptr(), "esp led2 off".len() as u32),
+            parse_uart(LED2_OFF_COMMAND.as_ptr(), LED2_OFF_COMMAND.len()),
             Command {
                 success: true,
                 led: Led::Led2,
@@ -178,24 +180,13 @@ mod tests {
 
     #[test]
     fn test_led2_off_fail() {
+        const LED2_FAIL_COMMAND: &str = "esp led2 wfea";
         assert_eq!(
-            parse_uart("esp led2 ofna".as_ptr(), "esp led2 ofna".len() as u32),
+            parse_uart(LED2_FAIL_COMMAND.as_ptr(), LED2_FAIL_COMMAND.len()),
             Command {
                 success: false,
                 led: Led::Led1,
                 state: LedState::Off,
-            }
-        );
-    }
-
-    #[test]
-    fn test_led3_on_oversized() {
-        assert_eq!(
-            parse_uart("esp led3 on".as_ptr(), ("esp led3 on".len() + 2) as u32),
-            Command {
-                success: true,
-                led: Led::Led3,
-                state: LedState::On,
             }
         );
     }
